@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class Table implements AutoCloseable {
 
-    private static final int BATCH_SIZE = 2_000;
+    private static final int BATCH_SIZE = 10_000;
 
     private final Connection conn;
     private final String stmtStr;
@@ -29,10 +29,10 @@ public class Table implements AutoCloseable {
     private int lastBatchSize;
     private AS400JDBCResultSetMetaData metaData;
 
-    protected Table(String dbCombined, String since, String id, String lmdt, Connection conn) throws SQLException {
+    protected Table(String dbCombined, String since, String id, String lm, Connection conn) throws SQLException {
         this.conn = conn;
 
-        this.stmtStr = String.format("SELECT CAST(%s AS VARCHAR(20)) AS \"_id\", %s AS \"_updated\", %s.* FROM %s WHERE %s >= %s ORDER BY %s LIMIT %s OFFSET ?", id, lmdt, dbCombined, dbCombined,  lmdt, since, lmdt, Table.BATCH_SIZE);
+        this.stmtStr = String.format("SELECT CAST(%s AS VARCHAR(20)) AS \"_id\", %s AS \"_updated\", %s.* FROM %s WHERE %s >= %s ORDER BY %s LIMIT %s OFFSET ?", id, lm, dbCombined, dbCombined, lm, since, lm, Table.BATCH_SIZE);
 
 
         this.offset = 0; 

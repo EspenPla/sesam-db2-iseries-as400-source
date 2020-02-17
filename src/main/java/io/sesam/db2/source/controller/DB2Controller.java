@@ -37,16 +37,16 @@ public class DB2Controller {
     public void getTableData(@PathVariable String table, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Table tableObj;
         String id = "";
-        String lmdt = "";
+        String lm = "";
         LOG.info("Serving request to fetch data from {} table", table);
-        if (request.getParameter("lmdt") == null || request.getParameter("id") == null){
+        if (request.getParameter("lm") == null || request.getParameter("id") == null){
             id = "";
-            lmdt = "";
-            LOG.error("Parameters id or lmdt is not set in the url. Please add it to your pipe and try again.");
+            lm = "";
+            LOG.error("Parameters id or lm is not set in the url. Please add it to your pipe and try again.");
         }else{
             id = request.getParameter("id");
-            lmdt = request.getParameter("lmdt");
-            LOG.info("Primary key field = {} & Last modified field = {}", id, lmdt);       
+            lm = request.getParameter("lm");
+            LOG.info("Primary key field = {} & Last modified field = {}", id, lm);       
         }
         long rowCounter = 0;
         String since = "";
@@ -58,7 +58,7 @@ public class DB2Controller {
             LOG.info("Since value is not set, setting since = 0");
         }
         try {
-            tableObj = dbConnector.fetchTable(table, since, id, lmdt);
+            tableObj = dbConnector.fetchTable(table, since, id, lm);
         } catch (ClassNotFoundException | SQLException ex) {
             response.sendError(500, ex.getMessage());
             return;
@@ -91,8 +91,8 @@ public class DB2Controller {
         writer.flush();
         try {
             tableObj.close();
-            LOG.info("Sucessfully processed {} rows", rowCounter);
-            LOG.info("Successfully closed DB connection");
+            LOG.info("Successfully processed {} rows and closed connection to {} table", rowCounter, table);
+            // LOG.info("Successfully closed DB connection to {} table", table);
         } catch (SQLException ex) {
             LOG.error("Couldn't close DB connection due to", ex);
         }

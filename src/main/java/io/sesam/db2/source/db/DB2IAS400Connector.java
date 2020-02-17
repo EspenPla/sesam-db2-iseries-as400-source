@@ -49,18 +49,18 @@ public class DB2IAS400Connector {
      * @param tableName name of DB table
      * @param since from Sesam: date of the last received entity
      * @param id name of the primary key in table
-     * @param lmdt field with Last Modified DateTime
+     * @param lm field with Last Modified time
      * @return tbale object
      * @throws ClassNotFoundException if DB2 iSeries AS400 driver not found (AS400JDBCDriver)
      * @throws SQLException if any SQL exception occurs during connection
      */
-    public Table fetchTable(String tableName, String since, String id, String lmdt) throws ClassNotFoundException, SQLException {
+    public Table fetchTable(String tableName, String since, String id, String lm) throws ClassNotFoundException, SQLException {
         String dbCombined = "";
         if (tableName.matches("%[^_A-Z0-9@$#]%")) {
             throw new IllegalArgumentException(String.format("bad table name %s", tableName));
         } else {
             dbCombined = dbName + "." + tableName;
         }
-        return new Table(dbCombined, since, id, lmdt, this.connect());
+        return new Table(dbCombined, since, id, lm, this.connect());
     }
 }
