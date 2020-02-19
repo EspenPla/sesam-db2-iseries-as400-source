@@ -13,13 +13,10 @@ import com.ibm.as400.access.AS400JDBCResultSet;
 import com.ibm.as400.access.AS400JDBCResultSetMetaData;
 
 import org.springframework.beans.factory.annotation.Autowired;
-/**
- *
- * @author Timur Samkharadze
- */
+
 public class Table implements AutoCloseable {
 
-    private static final int BATCH_SIZE = 10_000;
+    private static final int BATCH_SIZE = 2_000;
 
     private final Connection conn;
     private final String stmtStr;
@@ -33,7 +30,6 @@ public class Table implements AutoCloseable {
         this.conn = conn;
 
         this.stmtStr = String.format("SELECT CAST(%s AS VARCHAR(20)) AS \"_id\", %s AS \"_updated\", %s.* FROM %s WHERE %s >= %s ORDER BY %s LIMIT %s OFFSET ?", id, lm, dbCombined, dbCombined, lm, since, lm, Table.BATCH_SIZE);
-
 
         this.offset = 0; 
         this.lastBatchSize = Table.BATCH_SIZE;
